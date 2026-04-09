@@ -68,7 +68,7 @@ export default async function AdminPage() {
               <p className="text-sm text-azul-500">Sin registros aún</p>
             ) : (
               <div className="space-y-2">
-                {logs.map(l => (
+                {logs.map((l: typeof logs[number]) => (
                   <div key={l.id} className="flex items-center justify-between text-sm border-b border-azul-100 pb-2 last:border-0">
                     <div>
                       <p className="font-medium text-azul-800">{l.fuente}</p>

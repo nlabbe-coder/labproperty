@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Remate {
+  id                String   @id @default(cuid())
+  fuenteUrl         String?
+  fuenteId          String?  @unique
+  textoOriginal     String
+  direccion         String?
+  comuna            String?
+  region            String?
+  tipoInmueble      String?
+  descripcion       String?
+  precioMinimo      Float?
+  garantia          Float?
+  avaluoFiscal      Float?
+  rolAvaluo         String?
+  tribunal          String?
+  direccionTribunal String?
+  rolCausa          String?
+  caratulada        String?
+  inscripcionCBR    String?
+  fechaRemate       DateTime?
+  horaRemate        String?
+  modalidad         String?
+  emailTribunal     String?
+  estado            String   @default("activo")
+  destacado         Boolean  @default(false)
+  creadoEn          DateTime @default(now())
+  actualizadoEn     DateTime @updatedAt
+  seguimientos      Seguimiento[]
+  @@map("remates")
+}
+
+model Seguimiento {
+  id        String   @id @default(cuid())
+  remateId  String
+  usuarioId String
+  notas     String?
+  creadoEn  DateTime @default(now())
+  remate    Remate   @relation(fields: [remateId], references: [id])
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  @@unique([remateId, usuarioId])
+  @@map("seguimientos")
+}
+
+model Usuario {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  password     String
+  nombre       String
+  plan         String        @default("free")
+  creadoEn     DateTime      @default(now())
+  seguimientos Seguimiento[]
+  @@map("usuarios")
+}
+
+model Admin {
+  id       String   @id @default(cuid())
+  email    String   @unique
+  password String
+  nombre   String
+  creadoEn DateTime @default(now())
+  @@map("admins")
+}
+
+model LogScraping {
+  id          String   @id @default(cuid())
+  fuente      String
+  totalLeidos Int      @default(0)
+  nuevos      Int      @default(0)
+  errores     Int      @default(0)
+  detalle     String?
+  creadoEn    DateTime @default(now())
+  @@map("log_scraping")
+}
